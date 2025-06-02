@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
 import { Mail, Phone, Globe, Calendar, FileText, Package, CheckCircle, DollarSign } from 'lucide-react';
 
 const Index = () => {
@@ -52,6 +53,8 @@ const Index = () => {
   const componentsCost = companyPurchases.reduce((sum, item) => sum + item.total, 0);
   const additionalCost = additionalCharges.reduce((sum, item) => sum + item.amount, 0);
   const totalProjectCost = componentsCost + additionalCost;
+  const clientPaidAmount = 9500;
+  const overBudgetAmount = totalProjectCost - clientPaidAmount;
 
   const handlePrint = () => {
     window.print();
@@ -152,57 +155,33 @@ const Index = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Mobile Card Layout */}
-              <div className="block sm:hidden space-y-3">
-                {companyPurchases.map((item, index) => (
-                  <div key={index} className="bg-white p-3 rounded-lg border">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="font-medium text-gray-900">{item.item}</span>
-                      <span className="font-bold text-orange-600">₹{item.total}</span>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Qty: {item.quantity} × ₹{item.rate} each
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Desktop Table Layout */}
-              <div className="hidden sm:block overflow-hidden rounded-lg border border-orange-200">
-                <table className="w-full">
-                  <thead className="bg-orange-100">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-orange-800">Component</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-orange-800">Quantity</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-orange-800">Rate (₹)</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-orange-800">Total (₹)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-orange-100">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-orange-800">Component</TableHead>
+                      <TableHead className="text-center text-orange-800">Qty</TableHead>
+                      <TableHead className="text-right text-orange-800">Rate (₹)</TableHead>
+                      <TableHead className="text-right text-orange-800">Total (₹)</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
                     {companyPurchases.map((item, index) => (
-                      <tr key={index} className="hover:bg-orange-50">
-                        <td className="px-4 py-3 text-sm text-gray-900">{item.item}</td>
-                        <td className="px-4 py-3 text-center text-sm text-gray-700">{item.quantity}</td>
-                        <td className="px-4 py-3 text-right text-sm text-gray-700">₹{item.rate}</td>
-                        <td className="px-4 py-3 text-right text-sm font-semibold text-gray-900">₹{item.total}</td>
-                      </tr>
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">{item.item}</TableCell>
+                        <TableCell className="text-center">{item.quantity}</TableCell>
+                        <TableCell className="text-right">₹{item.rate}</TableCell>
+                        <TableCell className="text-right font-semibold">₹{item.total}</TableCell>
+                      </TableRow>
                     ))}
-                  </tbody>
-                  <tfoot className="bg-orange-100">
-                    <tr>
-                      <td className="px-4 py-3 text-sm font-bold text-orange-800" colSpan={3}>Components Subtotal</td>
-                      <td className="px-4 py-3 text-right text-sm font-bold text-orange-800">₹{componentsCost}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-              
-              {/* Mobile Subtotal */}
-              <div className="block sm:hidden mt-4 p-3 bg-orange-100 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-orange-800">Components Subtotal</span>
-                  <span className="font-bold text-orange-800">₹{componentsCost}</span>
-                </div>
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell className="font-bold text-orange-800" colSpan={3}>Components Subtotal</TableCell>
+                      <TableCell className="text-right font-bold text-orange-800">₹{componentsCost}</TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
               </div>
             </CardContent>
           </Card>
@@ -230,13 +209,33 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Total Project Cost */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
-            <div className="text-center">
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">Total Project Cost</h3>
-              <div className="text-3xl sm:text-4xl font-bold">₹{totalProjectCost.toLocaleString('en-IN')}</div>
-              <div className="text-sm sm:text-base text-blue-100 mt-2">
-                Components: ₹{componentsCost} + Additional Charges: ₹{additionalCost}
+          {/* Payment Summary */}
+          <div className="space-y-4 mb-6 sm:mb-8">
+            {/* Total Project Cost */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-4 sm:p-6">
+              <div className="text-center">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">Total Project Cost</h3>
+                <div className="text-3xl sm:text-4xl font-bold">₹{totalProjectCost.toLocaleString('en-IN')}</div>
+                <div className="text-sm sm:text-base text-blue-100 mt-2">
+                  Components: ₹{componentsCost} + Additional Charges: ₹{additionalCost}
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Breakdown */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-green-100 border border-green-300 rounded-lg p-4">
+                <div className="text-center">
+                  <h4 className="text-lg font-semibold text-green-800 mb-2">Amount Paid by Client</h4>
+                  <div className="text-2xl font-bold text-green-700">₹{clientPaidAmount.toLocaleString('en-IN')}</div>
+                </div>
+              </div>
+              <div className="bg-red-100 border border-red-300 rounded-lg p-4">
+                <div className="text-center">
+                  <h4 className="text-lg font-semibold text-red-800 mb-2">Over Budget Amount</h4>
+                  <div className="text-2xl font-bold text-red-700">₹{overBudgetAmount.toLocaleString('en-IN')}</div>
+                  <div className="text-sm text-red-600 mt-1">Remaining to be paid</div>
+                </div>
               </div>
             </div>
           </div>
@@ -263,6 +262,10 @@ const Index = () => {
                 <div className="flex items-start gap-2">
                   <span className="font-bold text-gray-600 min-w-[20px]">•</span>
                   <span>Delivered comprehensive technical documentation including detailed circuit diagrams</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="font-bold text-gray-600 min-w-[20px]">•</span>
+                  <span>Project exceeded initial budget due to enhanced AI capabilities and additional components required</span>
                 </div>
               </div>
             </CardContent>
