@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, Globe, Calendar, CreditCard, Shield, Database, Monitor, Settings, Server, CheckCircle } from 'lucide-react';
+import { Mail, Phone, Globe, Calendar, CreditCard, Shield, Database, Monitor, Settings, Server, CheckCircle } from 'lucide-react';
 
 const Index = () => {
   const quotationDate = new Date().toLocaleDateString('en-IN', {
@@ -83,8 +83,6 @@ const Index = () => {
   ];
 
   const totalCost = services.reduce((sum, service) => sum + service.price, 0);
-  const gstAmount = Math.round(totalCost * 0.18);
-  const finalAmount = totalCost + gstAmount;
 
   const handlePrint = () => {
     window.print();
@@ -111,10 +109,6 @@ const Index = () => {
                   <Phone className="w-4 h-4" />
                   <span>+91-7032229659</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  <span>123 Business Avenue, Tech City, India</span>
-                </div>
               </div>
             </div>
             <div className="text-right">
@@ -133,75 +127,60 @@ const Index = () => {
         <div className="p-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              Web Development Services Quotation
+              Service Breakdown
             </h2>
             <p className="text-gray-600">
               Comprehensive e-commerce platform development with modern features and robust architecture
             </p>
           </div>
 
-          {/* Services Details */}
-          <div className="space-y-6 mb-8">
-            {services.map((service, index) => (
-              <Card key={index} className="border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-3 text-lg">
-                    {service.icon}
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center">
-                        <span>{service.title}</span>
-                        <Badge variant="outline" className="text-lg font-bold text-green-700 border-green-300">
-                          ₹{service.price.toLocaleString('en-IN')}
-                        </Badge>
+          {/* Services Table */}
+          <div className="overflow-hidden rounded-lg border border-gray-200 mb-8">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 border-b">Service Category</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 border-b">Description & Features</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 border-b">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {services.map((service, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-6 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        {service.icon}
+                        <div>
+                          <div className="text-sm font-semibold text-gray-900">{service.title}</div>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-600 font-normal mt-1">{service.description}</p>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-2 text-gray-700">
-                        <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
+                    </td>
+                    <td className="px-6 py-6">
+                      <ul className="space-y-2">
+                        {service.features.map((feature, featureIndex) => (
+                          <li key={featureIndex} className="flex items-start gap-2 text-sm text-gray-700">
+                            <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="px-6 py-6 text-right">
+                      <span className="text-lg font-bold text-gray-900">₹{service.price.toLocaleString('en-IN')}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* Cost Summary */}
-          <Card className="bg-gray-50 border-2 border-gray-200">
-            <CardHeader>
-              <CardTitle className="text-xl text-center">Cost Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {services.map((service, index) => (
-                  <div key={index} className="flex justify-between items-center">
-                    <span className="text-gray-700">{service.title}</span>
-                    <span className="font-semibold">₹{service.price.toLocaleString('en-IN')}</span>
-                  </div>
-                ))}
-                <Separator className="my-4" />
-                <div className="flex justify-between items-center text-lg font-semibold">
-                  <span>Subtotal</span>
-                  <span>₹{totalCost.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm text-gray-600">
-                  <span>GST (18%)</span>
-                  <span>₹{gstAmount.toLocaleString('en-IN')}</span>
-                </div>
-                <Separator className="my-4" />
-                <div className="flex justify-between items-center text-xl font-bold text-blue-700 bg-blue-50 p-3 rounded-lg">
-                  <span>Total Amount</span>
-                  <span>₹{finalAmount.toLocaleString('en-IN')}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Total Amount */}
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-8">
+            <div className="flex justify-between items-center text-2xl font-bold text-blue-700">
+              <span>Total Amount</span>
+              <span>₹{totalCost.toLocaleString('en-IN')}</span>
+            </div>
+          </div>
 
           {/* Terms and Conditions */}
           <Card className="mt-8 border-orange-200 bg-orange-50">
@@ -215,26 +194,22 @@ const Index = () => {
               <ul className="space-y-3 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <span className="font-bold text-orange-600 min-w-[20px]">1.</span>
-                  <span>Costs are exclusive of applicable taxes (GST @ 18% will be added).</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold text-orange-600 min-w-[20px]">2.</span>
                   <span>Project timeline: Approximately 8-10 weeks from confirmation.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-orange-600 min-w-[20px]">3.</span>
+                  <span className="font-bold text-orange-600 min-w-[20px]">2.</span>
                   <span>Payment terms: 50% advance, 25% upon completion of frontend and backend, 25% on final delivery.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-orange-600 min-w-[20px]">4.</span>
+                  <span className="font-bold text-orange-600 min-w-[20px]">3.</span>
                   <span>Minor changes and maintenance will be provided free of charge for up to 6 months post-delivery.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-orange-600 min-w-[20px]">5.</span>
+                  <span className="font-bold text-orange-600 min-w-[20px]">4.</span>
                   <span>Any additional features or major changes beyond the scope will incur extra charges.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-orange-600 min-w-[20px]">6.</span>
+                  <span className="font-bold text-orange-600 min-w-[20px]">5.</span>
                   <span>Quotation is valid for 30 days from the issue date.</span>
                 </li>
               </ul>
