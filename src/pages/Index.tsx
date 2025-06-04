@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +14,7 @@ const Index = () => {
 
   const clientComponents = [
     "ESP32 Camera - 1",
-    "DFmini Player with SD Card - 1", 
+    "DFmini Player with SD Card - 1",
     "16 ohm's 0.5 W Speaker - 2",
     "Joy stick sensor - 1",
     "7-12 V Supply - 1",
@@ -42,19 +41,47 @@ const Index = () => {
     { item: "BreadBoard Large", quantity: 1, rate: 120, total: 120 },
     { item: "Aluminium single stranded wires", quantity: 1, rate: 40, total: 40 },
     { item: "Micro USB to C converter", quantity: 1, rate: 80, total: 80 },
-    { item: "Objects for detection", quantity: 5, rate: 72, total: 360 }
+    { item: "Objects for detection", quantity: 5, rate: 72, total: 360 },
+    { item: "USB Voltage Regulator", quantity: 1, rate: 950, total: 950 }
   ];
 
   const additionalCharges = [
-    { item: "Roboflow credits for model training", amount: 4000, note: "49$ converted to INR" },
-    { item: "Circuit diagram document preparation", amount: 500, note: "Technical documentation" }
+    {
+      item: <a href="https://roboflow.com/pricing" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Roboflow credits for model training</a>,
+      amount: 4000,
+      note: "AI Model Training Platform Subscription",
+      section: "software"
+    },
+    {
+      item: <a href="https://cloud.arduino.cc/plans/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Arduino IoT Cloud Platform</a>,
+      amount: 4000,
+      note: "Remote device monitoring and control",
+      section: "software"
+    },
+    {
+      item: "Software Development Service",
+      amount: 1000,
+      note: "Custom software implementation",
+      section: "services"
+    },
+    {
+      item: "Testing and Debugging",
+      amount: 1500,
+      note: "Hardware and software testing",
+      section: "services"
+    }
   ];
 
   const componentsCost = companyPurchases.reduce((sum, item) => sum + item.total, 0);
-  const additionalCost = additionalCharges.reduce((sum, item) => sum + item.amount, 0);
-  const totalProjectCost = componentsCost + additionalCost;
+  const softwareCost = additionalCharges.filter(charge => charge.section === "software").reduce((sum, item) => sum + item.amount, 0);
+  const servicesCost = additionalCharges.filter(charge => charge.section === "services").reduce((sum, item) => sum + item.amount, 0);
+  const additionalCost = softwareCost + servicesCost;
+  const totalProjectCost = 15000; // Fixed total cost
   const clientPaidAmount = 9500;
   const overBudgetAmount = totalProjectCost - clientPaidAmount;
+
+  const softwarePurchases = additionalCharges.filter(charge => charge.section === "software");
+  const professionalServices = additionalCharges.filter(charge => charge.section === "services");
 
   const handlePrint = () => {
     window.print();
@@ -146,12 +173,12 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Company Purchases */}
+          {/* Hardware Purchased Section */}
           <Card className="mb-6 border-orange-200 bg-orange-50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-orange-800 text-lg sm:text-xl">
-                <DollarSign className="w-5 h-5" />
-                Components Purchased by Company
+                <Package className="w-5 h-5" />
+                Hardware Purchased
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -177,7 +204,7 @@ const Index = () => {
                   </TableBody>
                   <TableFooter>
                     <TableRow>
-                      <TableCell className="font-bold text-orange-800" colSpan={3}>Components Subtotal</TableCell>
+                      <TableCell className="font-bold text-orange-800" colSpan={3}>Hardware Subtotal</TableCell>
                       <TableCell className="text-right font-bold text-orange-800">₹{componentsCost}</TableCell>
                     </TableRow>
                   </TableFooter>
@@ -186,17 +213,44 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Additional Charges */}
-          <Card className="mb-6 border-purple-200 bg-purple-50">
+          {/* Software Purchased Section */}
+          <Card className="mb-6 border-blue-200 bg-blue-50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-purple-800 text-lg sm:text-xl">
-                <FileText className="w-5 h-5" />
-                Additional Charges
+              <CardTitle className="flex items-center gap-2 text-blue-800 text-lg sm:text-xl">
+                <Globe className="w-5 h-5" />
+                Software Purchased
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {additionalCharges.map((charge, index) => (
+                {softwarePurchases.map((charge, index) => (
+                  <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white rounded-lg border border-blue-200">
+                    <div>
+                      <div className="font-medium text-gray-900">{charge.item}</div>
+                      <div className="text-sm text-gray-600">{charge.note}</div>
+                    </div>
+                    <div className="font-bold text-blue-600 mt-2 sm:mt-0">₹{charge.amount}</div>
+                  </div>
+                ))}
+                <div className="flex justify-between items-center p-3 bg-blue-100 rounded-lg border border-blue-300">
+                  <div className="font-semibold text-blue-800">Software Subtotal</div>
+                  <div className="font-bold text-blue-800">₹{softwareCost}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Professional Services Section */}
+          <Card className="mb-6 border-purple-200 bg-purple-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-purple-800 text-lg sm:text-xl">
+                <FileText className="w-5 h-5" />
+                Professional Development Services
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {professionalServices.map((charge, index) => (
                   <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white rounded-lg border border-purple-200">
                     <div>
                       <div className="font-medium text-gray-900">{charge.item}</div>
@@ -205,6 +259,10 @@ const Index = () => {
                     <div className="font-bold text-purple-600 mt-2 sm:mt-0">₹{charge.amount}</div>
                   </div>
                 ))}
+                <div className="flex justify-between items-center p-3 bg-purple-100 rounded-lg border border-purple-300">
+                  <div className="font-semibold text-purple-800">Services Subtotal</div>
+                  <div className="font-bold text-purple-800">₹{servicesCost}</div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -217,7 +275,7 @@ const Index = () => {
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">Total Project Cost</h3>
                 <div className="text-3xl sm:text-4xl font-bold">₹{totalProjectCost.toLocaleString('en-IN')}</div>
                 <div className="text-sm sm:text-base text-blue-100 mt-2">
-                  Components: ₹{componentsCost} + Additional Charges: ₹{additionalCost}
+                  Hardware: ₹{componentsCost} + Software: ₹{softwareCost} + Services: ₹{servicesCost}
                 </div>
               </div>
             </div>
